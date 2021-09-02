@@ -5,16 +5,27 @@ import 'codemirror/mode/xml/xml';
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/mode/css/css';
 import { Controlled as ControlledEditor } from 'react-codemirror2';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCompressAlt, faExpandAlt } from '@fortawesome/free-solid-svg-icons';
 
-const Editor = ({ name, lang, value, onChange }) => {
-	const handleChange = (editor, data, value) => {
+const Editor = ({ language, displayName, value, onChange }) => {
+	const [open, setOpen] = useState(true);
+
+	function handleChange(editor, data, value) {
 		onChange(value);
-	};
+	}
+
 	return (
-		<div className="editor-container">
+		<div className={`editor-container ${open ? '' : 'collapsed'}`}>
 			<div className="editor-title">
-				{name}
-				<button>o/c</button>
+				{displayName}
+				<button
+					type="button"
+					className="expand-collapse-btn"
+					onClick={() => setOpen((prevOpen) => !prevOpen)}
+				>
+					<FontAwesomeIcon icon={open ? faCompressAlt : faExpandAlt} />
+				</button>
 			</div>
 			<ControlledEditor
 				onBeforeChange={handleChange}
@@ -23,9 +34,9 @@ const Editor = ({ name, lang, value, onChange }) => {
 				options={{
 					lineWrapping: true,
 					lint: true,
+					mode: language,
 					theme: 'material',
 					lineNumbers: true,
-					mode: lang,
 				}}
 			/>
 		</div>

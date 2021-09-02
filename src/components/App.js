@@ -1,48 +1,46 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Editor from './Editor';
+import useLocalStorage from '../hooks/useLocalStorage';
 
 function App() {
-	const [html, setHtml] = useState('');
-	const [css, setCss] = useState('');
-	const [js, setJs] = useState('');
+	const [html, setHtml] = useLocalStorage('html', '');
+	const [css, setCss] = useLocalStorage('css', '');
+	const [js, setJs] = useLocalStorage('js', '');
 	const [srcDoc, setSrcDoc] = useState('');
 
 	useEffect(() => {
-		const timeOut = setTimeout(() => {
+		const timeout = setTimeout(() => {
 			setSrcDoc(`
-			<!doctype html>
-			<head></head>
-			<BODY>${html}</BODY>
-			<style>${css}</style>
-			<script>${js}</script>
-		</html>
-		`);
+        <html>
+          <body>${html}</body>
+          <style>${css}</style>
+          <script>${js}</script>
+        </html>
+      `);
 		}, 250);
 
-		return () => clearTimeout(timeOut);
+		return () => clearTimeout(timeout);
 	}, [html, css, js]);
 
 	return (
 		<>
+			<h3 className="app-title">Code Sharpie</h3>
 			<div className="pane top-pane">
 				<Editor
-					className="editor"
-					name="HTML"
-					lang="xml"
+					language="xml"
+					displayName="HTML"
 					value={html}
 					onChange={setHtml}
 				/>
 				<Editor
-					className="editor"
-					name="CSS"
-					lang="css"
+					language="css"
+					displayName="CSS"
 					value={css}
 					onChange={setCss}
 				/>
 				<Editor
-					className="editor"
-					name="JS"
-					lang="js"
+					language="javascript"
+					displayName="JS"
 					value={js}
 					onChange={setJs}
 				/>
